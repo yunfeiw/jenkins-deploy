@@ -30,7 +30,7 @@
 - 新建任务时，前端任务类型为 Freestyle project
 
   步骤 1 General
-  ![1](https://img.wenhairu.com/images/2020/12/29/D9oXU.png)
+  ![1](https://img.wenhairu.com/images/2020/12/29/D9oXU.png 1 )
 
   步骤 2 源码管理
 
