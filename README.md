@@ -10,12 +10,14 @@
 
     ```
       tar -vzxf jdk-xxx-linux-xxx.tar.gz -C /usr/local/java/
+
     ```
 
     3、添加环境变量
 
     ```
       vim /etc/profile
+      
     ```
 
     添加以下内容
