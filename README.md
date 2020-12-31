@@ -1,91 +1,73 @@
-## Window 下部署 jenkins
+## linux 下部署 jenkins
 
-### |安装
+### 安装
 
-- [jenkins 下载地址](https://www.jenkins.io/zh/download/) ;
+    > jdk8
 
-- 安装时，采用默认配置即可;安装完成默认访问地址[http://loaclhost:8080](http://loaclhost:8080);
+    1、下载 [jdk 8](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html) jdk-8xx-linux-xxx.tar.gz
 
-- 可更改 workspace，防止其占用 C 盘空间。
+    2、上传至服务器解压到 usr/local/java 目录下
 
-  1. 更改前停止服务 【http://localhost:8080/exit/】
+    ```
+      tar -vzxf jdk-xxx-linux-xxx.tar.gz -C /usr/local/java/
+    ```
 
-  2. "系统环境" 变量配置 JENKINS_HOME : path;
+    3、添加环境变量
 
-  3. 重启服务。jenkins 安装包下， 运行 ' java -jar jenkins.war '
+    ```
+      vim /etc/profile
+    ```
 
-### |插件
+    添加以下内容
 
-- init 时选择默认插件即可。
+    ```
+      # Java Path
 
-- 构建不同流程的 project，所需 plugin 也不尽相同。位置：Manage Jenkins -> Manage Plugins
+      export JAVA_HOME=/usr/local/java/jdk1.8.0_241
+      export CLASSPATH=$:CLASSPATH:$JAVA_HOME/lib/
+      export PATH=$PATH:$JAVA_HOME/bin
 
-- 前端任务构建时需要 NodeJs / Post build Task
+    ```
 
-- 安装完成后，需要配置 NodeJs 全局信息,便于在项目中使用。地址：Manage Jenkins -> Global Tool Configuration -> NodeJs
-  ![1](https://img.wenhairu.com/images/2020/12/29/D9dLu.png)
+    重新加载环境变量
 
-### |构建任务
+    ```
+      source /etc/profile
 
-- 新建任务时，前端任务类型为 Freestyle project
+      java -version
+    ```
 
-  步骤 1 General
-  ![1](https://img.wenhairu.com/images/2020/12/29/D9oXU.png 1 )
+  > jenkins
 
-  步骤 2 源码管理
+  ```
+  sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    
+  sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+  
+  yum install jenkins
 
-  Gredentials 可选 账号密码 或 SSH
+  ```
+  
+  完成后运行 <font color='yellow'> service jenkins start </font>
 
-  ![2](https://img.wenhairu.com/images/2020/12/29/D9ky0.png)
+  出现异常信息
 
-  步骤 3 构建触发器
+  <font color='red'>Job for jenkins.service failed because the control process exited with error code</font>
 
-  GitHub hook trigger for GITScm polling
+  原因：Jdk地址错误
 
-  ![3](https://img.wenhairu.com/images/2020/12/29/D9S6j.png)
+  解决：配置jenkins信息
 
-  步骤 4 构建环境
+  ```
+    vim /etc/init.d/jenkins
 
-  Provide Node & npm bin/ folder to PATH
+  ```
 
-  ![4](https://img.wenhairu.com/images/2020/12/29/D9c9g.png)
+  ![1](https://img-blog.csdnimg.cn/20190423170400340.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1ODY4NDEy,size_16,color_FFFFFF,t_70)
 
-  步骤 5 构建
 
-  ！构建命令在<font color='yellow'>window</font>环境下命令需单独使用
+  重新运行 service jenkins start
 
-  ![5](https://img.wenhairu.com/images/2020/12/29/D9g0K.png)
+  访问 http://你的IP:8080
 
-  步骤 6 构建后操作
-
-  ！构建命令在<font color='yellow'>window</font>环境下命令需单独使用
-
-  ![6](https://img.wenhairu.com/images/2020/12/29/D9ZWo.png)
-  ![7](https://img.wenhairu.com/images/2020/12/29/D9Mj3.png)
-
-### 关联 github
-
-GitHub 准备工作
-
-1、在 github 生成 token；
-![1](https://img.wenhairu.com/images/2020/12/29/D9b0I.png)
-
-2、配置 WebHook
-![2](https://img.wenhairu.com/images/2020/12/29/D9OYH.png)
-
-Jenkins 工作
-
-1、打开 Jenkins -> Manage Jenkins -> fonfigure system - GitHub 配置
-![1](https://img.wenhairu.com/images/2020/12/29/D9VXX.png)
-凭证
-![1.1](https://img.wenhairu.com/images/2020/12/29/D9THq.png)
-
-2、配置源码管理
-![2](https://img.wenhairu.com/images/2020/12/29/D9e8p.png)
-
-3、构建环境
-![3](https://img.wenhairu.com/images/2020/12/29/D9BG6.png)
-
------
 END
-
